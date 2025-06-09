@@ -10,7 +10,5 @@
   "version": "0.0.1",
   "iot_class": "cloud_polling",
   "integration_type": "service",
-  "platforms": [
-    "tts"
-  ]
+  "supported_platforms": ["tts"]
 }
