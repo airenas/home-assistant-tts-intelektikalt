@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_USERNAME, CONF_API_KEY
+from homeassistant.const import CONF_API_KEY
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
-from slugify import slugify
 
 from .api import IntelektikaLTTTSApiClientError, IntelektikaLTTTSApiClientCommunicationError, \
     IntelektikaLTTTSApiClientAuthenticationError, IntelektikaLTTTSApiClient
-from .const import DOMAIN, LOGGER, CONF_VOICE, Voice
+from .const import DOMAIN, LOGGER, CONF_VOICE, Voice, TITLE
 
 
 class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -28,8 +27,8 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 await self._test_credentials(
-                    username=user_input[CONF_API_KEY],
-                    password=user_input[CONF_VOICE],
+                    key=user_input.get(CONF_API_KEY),
+                    voice=user_input.get(CONF_VOICE),
                 )
             except IntelektikaLTTTSApiClientAuthenticationError as exception:
                 LOGGER.warning(exception)
@@ -41,15 +40,10 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 LOGGER.exception(exception)
                 _errors["base"] = "unknown"
             else:
-                await self.async_set_unique_id(
-                    ## Do NOT use this in production code
-                    ## The unique_id should never be something that can change
-                    ## https://developers.home-assistant.io/docs/config_entries_config_flow_handler#unique-ids
-                    unique_id=slugify(user_input[CONF_USERNAME])
-                )
+                await self.async_set_unique_id(DOMAIN)
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
-                    title=user_input[CONF_USERNAME],
+                    title=TITLE,
                     data=user_input,
                 )
 
@@ -60,9 +54,9 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Optional(CONF_API_KEY): selector.TextSelector(
                         selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                     ),
-                    vol.Required(CONF_VOICE, default= Voice.LAIMIS.value): selector.SelectSelector(
+                    vol.Required(CONF_VOICE, default=Voice.LAIMIS.value): selector.SelectSelector(
                         selector.SelectSelectorConfig(
-                            options=[ Voice.LAIMIS.value,  Voice.ASTRA.value,  Voice.LINA.value,  Voice.VYTAUTAS.value],
+                            options=[Voice.LAIMIS.value, Voice.ASTRA.value, Voice.LINA.value, Voice.VYTAUTAS.value],
                             mode=selector.SelectSelectorMode.DROPDOWN,
                         )
                     )

@@ -8,6 +8,8 @@ CONF_VOICE = "voice"
 
 DOMAIN = "homeassistant_tts_intelektikalt"
 
+TITLE = "IntelektikaLT TTS"
+
 URL = "https://sinteze.intelektika.lt/synthesis.service/prod/synthesize"
 
 class Voice(Enum):
