@@ -39,6 +39,8 @@ class IntelektikaLTTTSProvider(Provider):
                        }
             headers = {"Authorization": f"Key {self._api_key}"} if self._api_key else {}
 
+            _LOGGER.info("TTS request: %s", payload)
+
             async with async_timeout.timeout(10):
                 session = async_get_clientsession(self._hass)
                 async with session.post(self._url, json=payload, headers=headers) as resp:

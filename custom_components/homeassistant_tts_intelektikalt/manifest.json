@@ -5,6 +5,7 @@
     "@airenas"
   ],
   "config_flow": true,
+  "single_config_entry": true,
   "documentation": "https://github.com/airenas/homeassistant_tts_intelektikalt",
   "issue_tracker": "https://github.com/airenas/homeassistant_tts_intelektikalt/issues",
   "version": "0.0.1",
