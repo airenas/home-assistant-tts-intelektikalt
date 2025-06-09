@@ -1,5 +1,5 @@
 {
-  "domain": "intelektika.lt",
+  "domain": "homeassistant_tts_intelektikalt",
   "name": "LT TTS (Intelektikalt) Integration",
   "codeowners": [
     "@airenas"

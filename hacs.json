@@ -2,7 +2,7 @@
     "name": "LT TTS (Intelektikalt) Integration",
     "homeassistant": "2025.2.4",
     "hacs": "2.0.1",
-    "domain": "intelektika.lt",
+    "domain": "homeassistant_tts_intelektikalt",
     "country": "lt",
     "codeowners": [
         "airenass@gmail.com"
