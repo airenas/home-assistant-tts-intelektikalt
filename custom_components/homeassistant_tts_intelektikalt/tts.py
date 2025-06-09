@@ -1,3 +1,4 @@
+import base64
 import logging
 
 import async_timeout
@@ -7,7 +8,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.typing import ConfigType
 
-from custom_components.homeassistant_tts_intelektikalt.const import CONF_VOICE, URL
+from custom_components.homeassistant_tts_intelektikalt.const import CONF_VOICE, URL, TITLE
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,10 +28,12 @@ async def async_setup_entry(
 
 class IntelektikaLTTTSEntity(TextToSpeechEntity):
     def __init__(self, hass: HomeAssistant, config_entry: ConfigType) -> None:
+        _LOGGER.info(f"Init {__name__}")
         self._hass = hass
         self._language = "lt"
         self._api_key = config_entry.get("api_key")
         self._voice = config_entry.get(CONF_VOICE, "laimis")
+        _LOGGER.info(f"Using voice: {self._voice}")
         self._url = URL
 
     @property
@@ -42,6 +45,10 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
     def supported_languages(self) -> list[str]:
         """Return list of supported languages."""
         return [self._language]
+
+    @property
+    def name(self):
+        return TITLE
 
     @property
     def supported_options(self) -> list[str]:
@@ -65,8 +72,9 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
                 session = async_get_clientsession(self._hass)
                 async with session.post(self._url, json=payload, headers=headers) as resp:
                     resp.raise_for_status()
-                    data = await resp.read()
-                    return "audio/wav", data
+                    data = await resp.json()
+                    audio_bytes = base64.b64decode(data.get("audioAsString"))
+                    return "audio/wav", audio_bytes
 
         except Exception as e:
             _LOGGER.error("Error fetching TTS audio: %s", e)
@@ -75,6 +83,7 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
 
 class IntelektikaLTTTSProvider(Provider):
     def __init__(self, hass, config):
+        _LOGGER.info(f"Init {__name__}")
         self._hass = hass
         self._language = "lt"
         self._api_key = config.get("api_key")
@@ -84,6 +93,10 @@ class IntelektikaLTTTSProvider(Provider):
     @property
     def default_language(self):
         return self._language
+
+    @property
+    def name(self):
+        return TITLE
 
     @property
     def supported_languages(self):
@@ -106,12 +119,13 @@ class IntelektikaLTTTSProvider(Provider):
                 session = async_get_clientsession(self._hass)
                 async with session.post(self._url, json=payload, headers=headers) as resp:
                     resp.raise_for_status()
-                    data = await resp.read()
-                    return ("audio/wav", data)
+                    data = await resp.json()
+                    audio_bytes = base64.b64decode(data.get("audioAsString"))
+                    return "audio/wav", audio_bytes
 
         except Exception as e:
             _LOGGER.error("Error fetching TTS audio: %s", e)
-            return (None, None)
+            return None, None
 
     @property
     def supports_streaming(self) -> bool:
