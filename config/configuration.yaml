@@ -9,4 +9,4 @@ homeassistant:
 logger:
   default: info
   logs:
-    custom_components.homeassistant_tts_intelektikalt: debug
+    custom_components.intelektikalt_tts: debug

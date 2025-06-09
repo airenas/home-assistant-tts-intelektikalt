@@ -1,8 +1,3 @@
-"""Sample API Client."""
-
-from __future__ import annotations
-
-
 class IntelektikaLTTTSApiClientError(Exception):
     """Exception to indicate a general API error."""
 

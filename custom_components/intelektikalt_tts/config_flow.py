@@ -36,12 +36,6 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
                     vol.Optional(CONF_API_KEY): selector.TextSelector(
                         selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                     ),
-                    # vol.Required(CONF_VOICE, default=VoiceEnum.default().value): selector.SelectSelector(
-                    #     selector.SelectSelectorConfig(
-                    #         options=[VoiceEnum.LAIMIS.value, VoiceEnum.ASTRA.value, VoiceEnum.LINA.value, VoiceEnum.VYTAUTAS.value],
-                    #         mode=selector.SelectSelectorMode.DROPDOWN,
-                    #     )
-                    # )
                 },
             ),
             errors=_errors,

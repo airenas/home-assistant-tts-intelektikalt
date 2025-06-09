@@ -2,7 +2,7 @@
 Custom integration to integrate IntelektikaLT TTS Service with Home Assistant.
 
 For more details about this integration, please refer to
-https://github.com/airenas/homeassistant_tts_intelektikalt
+https://github.com/airenas/home-assistant-tts-intelektikalt
 """
 from __future__ import annotations
 
