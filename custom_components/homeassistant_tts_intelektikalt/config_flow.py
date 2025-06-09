@@ -22,7 +22,7 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
         """Handle a flow initialized by the user."""
         _errors = {}
         if user_input is not None:
-            await self.async_set_unique_id(DOMAIN)
+            await self.async_set_unique_id(API_DOMAIN)
             self._abort_if_unique_id_configured()
             return self.async_create_entry(
                 title=API_TITLE,
