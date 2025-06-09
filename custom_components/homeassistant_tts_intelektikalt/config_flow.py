@@ -7,7 +7,7 @@ from homeassistant import config_entries
 from homeassistant.const import CONF_API_KEY
 from homeassistant.helpers import selector
 
-from .const import CONF_VOICE, Voice, API_TITLE, API_DOMAIN
+from .const import CONF_VOICE, API_TITLE, API_DOMAIN, VoiceEnum
 
 
 class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
@@ -36,9 +36,9 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
                     vol.Optional(CONF_API_KEY): selector.TextSelector(
                         selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                     ),
-                    vol.Required(CONF_VOICE, default=Voice.default().value): selector.SelectSelector(
+                    vol.Required(CONF_VOICE, default=VoiceEnum.default().value): selector.SelectSelector(
                         selector.SelectSelectorConfig(
-                            options=[Voice.LAIMIS.value, Voice.ASTRA.value, Voice.LINA.value, Voice.VYTAUTAS.value],
+                            options=[VoiceEnum.LAIMIS.value, VoiceEnum.ASTRA.value, VoiceEnum.LINA.value, VoiceEnum.VYTAUTAS.value],
                             mode=selector.SelectSelectorMode.DROPDOWN,
                         )
                     )

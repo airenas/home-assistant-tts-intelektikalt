@@ -12,12 +12,12 @@ API_URL = "https://sinteze.intelektika.lt/synthesis.service/prod/synthesize"
 API_LANGUAGE = "lt"
 
 
-class Voice(Enum):
+class VoiceEnum(Enum):
     LAIMIS = "laimis"
     LINA = "lina"
     ASTRA = "astra"
     VYTAUTAS = "vytautas"
 
     @classmethod
-    def default(cls) -> "Voice":
+    def default(cls) -> "VoiceEnum":
         return cls.LAIMIS
