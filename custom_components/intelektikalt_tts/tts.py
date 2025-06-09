@@ -2,15 +2,14 @@ import base64
 import logging
 
 import async_timeout
+from custom_components.homeassistant_tts_intelektikalt.const import CONF_VOICE, API_URL, API_TITLE, API_LANGUAGE, \
+    API_FORMAT, VoiceEnum
 from homeassistant.components.tts import Provider, TextToSpeechEntity, Voice
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.typing import ConfigType
-
-from custom_components.homeassistant_tts_intelektikalt.const import CONF_VOICE, API_URL, API_TITLE, API_LANGUAGE, \
-    API_FORMAT, VoiceEnum
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -62,10 +61,10 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
         """Return a list of supported voices for a language."""
         if language == self._language:  # Assuming `self._language` is the default language
             return [
-                Voice(voice_id="laimis", name="Laimis"),
-                Voice(voice_id="lina", name="Lina"),
-                Voice(voice_id="astra", name="Astra"),
-                Voice(voice_id="vytautas", name="Vytautas"),
+                Voice(voice_id=VoiceEnum.LAIMIS.value, name="Laimis"),
+                Voice(voice_id=VoiceEnum.LINA.value, name="Lina"),
+                Voice(voice_id=VoiceEnum.ASTRA.value, name="Astra"),
+                Voice(voice_id=VoiceEnum.VYTAUTAS.value, name="Vytautas"),
             ]
         return None
 
