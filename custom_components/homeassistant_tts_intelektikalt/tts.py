@@ -34,7 +34,7 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
         self._hass = hass
         self._language = API_LANGUAGE
         self._api_key = config_entry.get("api_key")
-        self._voice = config_entry.get(CONF_VOICE, VoiceEnum.default().value)
+        self._voice = VoiceEnum.default().value
         _LOGGER.info(f"Using voice: {self._voice}")
         self._url = API_URL
 
@@ -107,7 +107,7 @@ class IntelektikaLTTTSProvider(Provider):
         self._hass = hass
         self._language = API_LANGUAGE
         self._api_key = config.get("api_key")
-        self._voice = config.get(CONF_VOICE, VoiceEnum.default().value)
+        self._voice = VoiceEnum.default().value
         self._url = API_URL
 
     @property
