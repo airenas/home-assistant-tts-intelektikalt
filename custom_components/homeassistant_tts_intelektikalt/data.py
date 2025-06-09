@@ -1,4 +1,4 @@
-"""Custom types for integration_blueprint."""
+"""Custom types for homeassistant_tts_intelektikalt."""
 
 from __future__ import annotations
 

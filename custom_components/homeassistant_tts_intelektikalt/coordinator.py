@@ -1,4 +1,4 @@
-"""DataUpdateCoordinator for integration_blueprint."""
+"""DataUpdateCoordinator for homeassistant_tts_intelektikalt."""
 
 from __future__ import annotations
 
