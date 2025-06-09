@@ -72,9 +72,7 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
     async def async_get_tts_audio(self, message, language, options=None):
         try:
             selected_voice = options.get(CONF_VOICE) if options else None
-            if selected_voice:
-                selected_voice = selected_voice.voice_id
-            else:
+            if not selected_voice:
                 selected_voice = self._voice
 
             payload = {"text": message,
@@ -125,9 +123,7 @@ class IntelektikaLTTTSProvider(Provider):
     async def async_get_tts_audio(self, message, language, options=None):
         try:
             selected_voice = options.get(CONF_VOICE) if options else None
-            if selected_voice:
-                selected_voice = selected_voice.voice_id
-            else:
+            if not selected_voice:
                 selected_voice = self._voice
 
             payload = {"text": message,
