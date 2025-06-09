@@ -7,7 +7,7 @@ from homeassistant import config_entries
 from homeassistant.const import CONF_API_KEY
 from homeassistant.helpers import selector
 
-from .const import CONF_VOICE, API_TITLE, API_DOMAIN, VoiceEnum
+from .const import API_TITLE, API_DOMAIN
 
 
 class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
@@ -26,7 +26,7 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
             self._abort_if_unique_id_configured()
             return self.async_create_entry(
                 title=API_TITLE,
-                data=user_input,
+                data=user_input
             )
 
         return self.async_show_form(
@@ -35,8 +35,8 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
                 {
                     vol.Optional(CONF_API_KEY): selector.TextSelector(
                         selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
-                    ),
-                },
+                    )
+                }
             ),
             errors=_errors,
         )
