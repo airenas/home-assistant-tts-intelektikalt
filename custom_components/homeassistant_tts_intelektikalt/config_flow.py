@@ -7,10 +7,10 @@ from homeassistant import config_entries
 from homeassistant.const import CONF_API_KEY
 from homeassistant.helpers import selector
 
-from .const import DOMAIN, CONF_VOICE, Voice, TITLE
+from .const import CONF_VOICE, Voice, API_TITLE, API_DOMAIN
 
 
-class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
     """Config flow for IntelektikaLT TTS."""
 
     VERSION = 1
@@ -25,7 +25,7 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(DOMAIN)
             self._abort_if_unique_id_configured()
             return self.async_create_entry(
-                title=TITLE,
+                title=API_TITLE,
                 data=user_input,
             )
 
@@ -36,7 +36,7 @@ class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Optional(CONF_API_KEY): selector.TextSelector(
                         selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                     ),
-                    vol.Required(CONF_VOICE, default=Voice.LAIMIS.value): selector.SelectSelector(
+                    vol.Required(CONF_VOICE, default=Voice.default().value): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=[Voice.LAIMIS.value, Voice.ASTRA.value, Voice.LINA.value, Voice.VYTAUTAS.value],
                             mode=selector.SelectSelectorMode.DROPDOWN,

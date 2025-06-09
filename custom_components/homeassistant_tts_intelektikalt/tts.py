@@ -8,7 +8,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.typing import ConfigType
 
-from custom_components.homeassistant_tts_intelektikalt.const import CONF_VOICE, URL, TITLE
+from custom_components.homeassistant_tts_intelektikalt.const import CONF_VOICE, API_URL, API_TITLE, API_LANGUAGE, Voice, \
+    API_FORMAT
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,11 +31,11 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
     def __init__(self, hass: HomeAssistant, config_entry: ConfigType) -> None:
         _LOGGER.info(f"Init {__name__}")
         self._hass = hass
-        self._language = "lt"
+        self._language = API_LANGUAGE
         self._api_key = config_entry.get("api_key")
-        self._voice = config_entry.get(CONF_VOICE, "laimis")
+        self._voice = config_entry.get(CONF_VOICE, Voice.default().value)
         _LOGGER.info(f"Using voice: {self._voice}")
-        self._url = URL
+        self._url = API_URL
 
     @property
     def default_language(self) -> str:
@@ -48,7 +49,7 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
 
     @property
     def name(self):
-        return TITLE
+        return API_TITLE
 
     @property
     def supported_options(self) -> list[str]:
@@ -58,7 +59,7 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
     async def async_get_tts_audio(self, message, language, options=None):
         try:
             payload = {"text": message,
-                       "outputFormat": "wav",
+                       "outputFormat": API_FORMAT,
                        "outputTextFormat": "none",
                        "saveRequest": False,
                        "speed": 1,
@@ -74,7 +75,7 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
                     resp.raise_for_status()
                     data = await resp.json()
                     audio_bytes = base64.b64decode(data.get("audioAsString"))
-                    return "audio/wav", audio_bytes
+                    return API_FORMAT, audio_bytes
 
         except Exception as e:
             _LOGGER.error("Error fetching TTS audio: %s", e)
@@ -85,10 +86,10 @@ class IntelektikaLTTTSProvider(Provider):
     def __init__(self, hass, config):
         _LOGGER.info(f"Init {__name__}")
         self._hass = hass
-        self._language = "lt"
+        self._language = API_LANGUAGE
         self._api_key = config.get("api_key")
-        self._voice = config.get(CONF_VOICE, "laimis")
-        self._url = "https://sinteze.intelektika.lt/synthesis.service/prod/synthesize"
+        self._voice = config.get(CONF_VOICE, Voice.default().value)
+        self._url = API_URL
 
     @property
     def default_language(self):
@@ -96,7 +97,7 @@ class IntelektikaLTTTSProvider(Provider):
 
     @property
     def name(self):
-        return TITLE
+        return API_TITLE
 
     @property
     def supported_languages(self):
@@ -105,7 +106,7 @@ class IntelektikaLTTTSProvider(Provider):
     async def async_get_tts_audio(self, message, language, options=None):
         try:
             payload = {"text": message,
-                       "outputFormat": "wav",
+                       "outputFormat": API_FORMAT,
                        "outputTextFormat": "none",
                        "saveRequest": False,
                        "speed": 1,
@@ -121,7 +122,7 @@ class IntelektikaLTTTSProvider(Provider):
                     resp.raise_for_status()
                     data = await resp.json()
                     audio_bytes = base64.b64decode(data.get("audioAsString"))
-                    return "audio/wav", audio_bytes
+                    return API_FORMAT, audio_bytes
 
         except Exception as e:
             _LOGGER.error("Error fetching TTS audio: %s", e)
