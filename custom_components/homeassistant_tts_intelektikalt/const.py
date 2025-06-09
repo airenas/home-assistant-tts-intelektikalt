@@ -18,5 +18,6 @@ class Voice(Enum):
     ASTRA = "astra"
     VYTAUTAS = "vytautas"
 
-    def default(self):
-        return self.LAIMIS
+    @staticmethod
+    def default():
+        return Voice.LAIMIS
