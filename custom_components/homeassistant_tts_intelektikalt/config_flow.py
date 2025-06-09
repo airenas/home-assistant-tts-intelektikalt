@@ -1,47 +1,43 @@
-"""Adds config flow for Blueprint."""
+"""Adds config flow for IntelektikaLT TTS."""
 
 from __future__ import annotations
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+from homeassistant.const import CONF_USERNAME, CONF_API_KEY
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from slugify import slugify
 
-from .api import (
-    IntegrationBlueprintApiClient,
-    IntegrationBlueprintApiClientAuthenticationError,
-    IntegrationBlueprintApiClientCommunicationError,
-    IntegrationBlueprintApiClientError,
-)
-from .const import DOMAIN, LOGGER
+from .api import IntelektikaLTTTSApiClientError, IntelektikaLTTTSApiClientCommunicationError, \
+    IntelektikaLTTTSApiClientAuthenticationError, IntelektikaLTTTSApiClient
+from .const import DOMAIN, LOGGER, CONF_VOICE, Voice
 
 
-class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Config flow for Blueprint."""
+class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+    """Config flow for IntelektikaLT TTS."""
 
     VERSION = 1
 
     async def async_step_user(
-        self,
-        user_input: dict | None = None,
+            self,
+            user_input: dict | None = None,
     ) -> config_entries.ConfigFlowResult:
         """Handle a flow initialized by the user."""
         _errors = {}
         if user_input is not None:
             try:
                 await self._test_credentials(
-                    username=user_input[CONF_USERNAME],
-                    password=user_input[CONF_PASSWORD],
+                    username=user_input[CONF_API_KEY],
+                    password=user_input[CONF_VOICE],
                 )
-            except IntegrationBlueprintApiClientAuthenticationError as exception:
+            except IntelektikaLTTTSApiClientAuthenticationError as exception:
                 LOGGER.warning(exception)
                 _errors["base"] = "auth"
-            except IntegrationBlueprintApiClientCommunicationError as exception:
+            except IntelektikaLTTTSApiClientCommunicationError as exception:
                 LOGGER.error(exception)
                 _errors["base"] = "connection"
-            except IntegrationBlueprintApiClientError as exception:
+            except IntelektikaLTTTSApiClientError as exception:
                 LOGGER.exception(exception)
                 _errors["base"] = "unknown"
             else:
@@ -61,29 +57,25 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_USERNAME,
-                        default=(user_input or {}).get(CONF_USERNAME, vol.UNDEFINED),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT,
-                        ),
+                    vol.Optional(CONF_API_KEY): selector.TextSelector(
+                        selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                     ),
-                    vol.Required(CONF_PASSWORD): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.PASSWORD,
-                        ),
-                    ),
+                    vol.Required(CONF_VOICE, default= Voice.LAIMIS.value): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=[ Voice.LAIMIS.value,  Voice.ASTRA.value,  Voice.LINA.value,  Voice.VYTAUTAS.value],
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                        )
+                    )
                 },
             ),
             errors=_errors,
         )
 
-    async def _test_credentials(self, username: str, password: str) -> None:
-        """Validate credentials."""
-        client = IntegrationBlueprintApiClient(
-            username=username,
-            password=password,
+    async def _test_credentials(self, key: str, voice: str) -> None:
+        """Validate key."""
+        client = IntelektikaLTTTSApiClient(
+            key=key,
+            voice=voice,
             session=async_create_clientsession(self.hass),
         )
-        await client.async_get_data()
+        await client.async_test()

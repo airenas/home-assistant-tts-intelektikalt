@@ -27,7 +27,7 @@ class IntelektikaLTTTSProvider(Provider):
             payload = {"text": message, 
                 "outputFormat": "wav", 
                 "outputTextFormat": "none", 
-                "saveRequest": false, 
+                "saveRequest": False,
                 "speed": 1, 
                 "voice":self._voice
             }
