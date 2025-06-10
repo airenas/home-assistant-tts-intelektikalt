@@ -9,9 +9,9 @@
             }
         },
         "error": {
-            "auth": "API Key is wrong.",
-            "connection": "Unable to connect to the server.",
-            "unknown": "Unknown error occurred."
+            "intelektikalt_api_error": "API error: {value}",
+            "intelektikalt_quota_exceeded": "Monthly quota {remaining}/{quota} exceeded",
+            "intelektikalt_wrong_key": "Wrong API key"
         },
         "abort": {
             "already_configured": "This entry is already configured."

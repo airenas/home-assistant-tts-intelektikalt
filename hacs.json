@@ -1,5 +1,5 @@
 {
-    "name": "IntelektikaLT TTS Integration",
+    "name": "Intelektika.lt TTS Integration",
     "homeassistant": "2025.2.4",
     "hacs": "2.0.1",
     "domain": "intelektikalt_tts",
@@ -7,7 +7,7 @@
     "codeowners": [
         "airenass@gmail.com"
     ],
-    "description": "Custom TTS (Lithuanian) integration for Home Assistant that uses Intelektikalt REST API.",
+    "description": "Custom TTS (Lithuanian) integration for Home Assistant that uses Intelektika.lt REST API.",
     "filename": "custom_components/intelektikalt_tts/manifest.json",
     "type": "integration",
     "render_readme": true

@@ -9,9 +9,9 @@
             }
         },
         "error": {
-            "auth": "Blogas API Raktas.",
-            "connection": "Nepavyko prisijungti prie serverio.",
-            "unknown": "Vidinė serviso klaida."
+            "intelektikalt_api_error": "API klaida: {value}",
+            "intelektikalt_quota_exceeded": "Baigėsi mėnesio ({remaining}/{quota}) limitas",
+            "intelektikalt_wrong_key": "Blogas API raktas"
         },
         "abort": {
             "already_configured": "Servisas jau sukonfigūruotas."

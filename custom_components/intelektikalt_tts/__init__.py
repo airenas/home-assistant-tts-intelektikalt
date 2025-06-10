@@ -1,5 +1,5 @@
 """
-Custom integration to integrate IntelektikaLT TTS Service with Home Assistant.
+Custom integration to integrate Intelektika.lt TTS Service with Home Assistant.
 
 For more details about this integration, please refer to
 https://github.com/airenas/home-assistant-tts-intelektikalt

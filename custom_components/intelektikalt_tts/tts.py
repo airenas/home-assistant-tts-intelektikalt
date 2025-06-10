@@ -6,10 +6,12 @@ from homeassistant.components.tts import Provider, TextToSpeechEntity, Voice
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.core import callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from custom_components.intelektikalt_tts.const import CONF_VOICE, API_URL, API_TITLE, API_LANGUAGE, \
     API_FORMAT, VoiceEnum
+from custom_components.intelektikalt_tts.errors import check_response, ApiClientError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -68,14 +70,15 @@ class IntelektikaLTTTSProvider(Provider):
             async with async_timeout.timeout(10):
                 session = async_get_clientsession(self._hass)
                 async with session.post(self._url, json=payload, headers=headers) as resp:
-                    resp.raise_for_status()
+                    check_response(resp)
                     data = await resp.json()
                     audio_bytes = base64.b64decode(data.get("audioAsString"))
                     return API_FORMAT, audio_bytes
 
+        except HomeAssistantError as e:
+            raise e
         except Exception as e:
-            _LOGGER.error("Error fetching TTS audio: %s", e)
-            return None, None
+            raise ApiClientError(value=f"{e}")
 
     @property
     def supports_streaming(self) -> bool:

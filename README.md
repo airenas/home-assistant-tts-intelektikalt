@@ -1,12 +1,11 @@
-# IntelektikaLT TTS Integration
+# Intelektika.lt TTS Integration
 
-The IntelektikaLT TTS Integration is a custom component for Home Assistant that provides Lithuanian text-to-speech (TTS) functionality using the IntelektikaLT REST API.
+The Intelektika.lt TTS Integration is a custom component for Home Assistant that provides Lithuanian text-to-speech (TTS) functionality using the REST API.
 
 ## Features
 
 - Converts text to speech in Lithuanian.
 - Supports multiple voices.
-- Integrates seamlessly with Home Assistant's TTS platform.
 
 ## Installation
 
@@ -16,22 +15,22 @@ The IntelektikaLT TTS Integration is a custom component for Home Assistant that 
 
 2. **HACS Installation**:
    - Add this repository to HACS as a custom repository.
-   - Search for "IntelektikaLT TTS Integration" in HACS and install it.
+   - Search for "Intelektika.lt TTS Integration" in HACS and install it.
 
 3. Restart Home Assistant after installation.
 
 ## Configuration
 
 1. Go to **Settings** > **Devices & Services** > **Integrations**.
-2. Click **Add Integration** and search for "IntelektikaLT TTS".
-3. Enter your API key and configure the integration.
+2. Click **Add Integration** and search for "Intelektika.lt TTS".
+3. (Optional) Enter your API key and configure the integration. Otherwise, 5000 monthly symbols limit will be applied.
 
 ### Example `configuration.yaml` (if required)
 
 ```yaml
 tts:
   - platform: intelektikalt_tts
-    api_key: YOUR_API_KEY
+    api_key: YOUR_API_KEY # Optional, if you want to use your own API key
     language: lt
     voice: laimis
 ```
@@ -44,6 +43,8 @@ The integration supports the following voices:
 - Lina
 - Astra
 - Vytautas
+
+See samples at [Intelektika.lt Voices](https://snekos-sinteze.lt).
 
 ## Usage
 

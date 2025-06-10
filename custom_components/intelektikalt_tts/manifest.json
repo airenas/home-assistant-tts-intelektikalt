@@ -1,6 +1,6 @@
 {
   "domain": "intelektikalt_tts",
-  "name": "IntelektikaLT TTS Integration",
+  "name": "Intelektika.lt TTS Integration",
   "codeowners": [
     "@airenas"
   ],
@@ -8,7 +8,7 @@
   "single_config_entry": true,
   "documentation": "https://github.com/airenas/home-assistant-tts-intelektikalt",
   "issue_tracker": "https://github.com/airenas/home-assistant-tts-intelektikalt/issues",
-  "version": "v0.0.5",
+  "version": "v0.0.7",
   "iot_class": "cloud_polling",
   "integration_type": "service",
   "supported_platforms": ["tts"]
