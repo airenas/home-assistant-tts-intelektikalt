@@ -4,6 +4,7 @@ Custom integration to integrate Intelektika.lt TTS Service with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/airenas/home-assistant-tts-intelektikalt
 """
+
 from __future__ import annotations
 
 from homeassistant.config_entries import ConfigEntry

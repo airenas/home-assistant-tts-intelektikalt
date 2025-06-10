@@ -1,18 +1,13 @@
 from typing import TYPE_CHECKING
 
 from aiohttp import ClientResponseError
-from homeassistant.exceptions import (
-    HomeAssistantError
-
-)
+from homeassistant.exceptions import HomeAssistantError
 
 
 class ApiClientError(HomeAssistantError):
     """Exception to indicate a general API error."""
 
-    def __init__(
-            self, value: str
-    ) -> None:
+    def __init__(self, value: str) -> None:
         """Initialize error."""
         if TYPE_CHECKING:
             value = str(value)
@@ -30,9 +25,7 @@ class ApiClientError(HomeAssistantError):
 class WrongKeyError(HomeAssistantError):
     """Exception to indicate a bad key error."""
 
-    def __init__(
-            self
-    ) -> None:
+    def __init__(self) -> None:
         """Initialize error."""
         super().__init__(
             translation_domain="homeassistant",
@@ -44,9 +37,7 @@ class WrongKeyError(HomeAssistantError):
 class QuotaExceeded(HomeAssistantError):
     """Exception to indicate out of quota error."""
 
-    def __init__(
-            self, quota: int, remaining: int
-    ) -> None:
+    def __init__(self, quota: int, remaining: int) -> None:
         """Initialize error."""
         if TYPE_CHECKING:
             quota = str(quota)
@@ -69,12 +60,17 @@ def check_response(resp):
         resp.raise_for_status()
     except ClientResponseError as e:
         if e.status == 429:
-            raise QuotaExceeded(remaining=e.headers.get('X-Rate-Limit-Short-Remaining', 0), quota=e.headers.get('X-Rate-Limit-Limit', 0))
-        elif e.status == 403:
-            raise QuotaExceeded(remaining=e.headers.get('X-Rate-Limit-Remaining', 0), quota=e.headers.get('X-Rate-Limit-Limit', 0))
-        elif e.status == 401:
-            raise WrongKeyError()
-        else:
-            raise ApiClientError(value=f"failed with status {e.status}: {e.message}")
+            raise QuotaExceeded(
+                remaining=e.headers.get("X-Rate-Limit-Short-Remaining", 0),
+                quota=e.headers.get("X-Rate-Limit-Limit", 0),
+            )
+        if e.status == 403:
+            raise QuotaExceeded(
+                remaining=e.headers.get("X-Rate-Limit-Remaining", 0),
+                quota=e.headers.get("X-Rate-Limit-Limit", 0),
+            )
+        if e.status == 401:
+            raise WrongKeyError
+        raise ApiClientError(value=f"failed with status {e.status}: {e.message}")
     except Exception as e:
         raise ApiClientError(value=f"{e}")

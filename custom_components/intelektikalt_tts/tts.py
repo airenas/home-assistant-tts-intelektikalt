@@ -4,14 +4,19 @@ import logging
 import async_timeout
 from homeassistant.components.tts import Provider, TextToSpeechEntity, Voice
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from custom_components.intelektikalt_tts.const import CONF_VOICE, API_URL, API_TITLE, API_LANGUAGE, \
-    API_FORMAT, VoiceEnum
-from custom_components.intelektikalt_tts.errors import check_response, ApiClientError
+from custom_components.intelektikalt_tts.const import (
+    API_FORMAT,
+    API_LANGUAGE,
+    API_TITLE,
+    API_URL,
+    CONF_VOICE,
+    VoiceEnum,
+)
+from custom_components.intelektikalt_tts.errors import ApiClientError, check_response
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,8 +26,16 @@ async def async_get_engine(hass, config, discovery_info=None):
     return IntelektikaLTTTSProvider(hass, config)
 
 
-async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities) -> None:
-    async_add_entities([IntelektikaLTTTSEntity(provider=IntelektikaLTTTSProvider(hass, config_entry.data))])
+async def async_setup_entry(
+    hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities
+) -> None:
+    async_add_entities(
+        [
+            IntelektikaLTTTSEntity(
+                provider=IntelektikaLTTTSProvider(hass, config_entry.data)
+            )
+        ]
+    )
 
 
 class IntelektikaLTTTSProvider(Provider):
@@ -56,20 +69,23 @@ class IntelektikaLTTTSProvider(Provider):
             if not selected_voice:
                 selected_voice = self._voice
 
-            payload = {"text": message,
-                       "outputFormat": API_FORMAT,
-                       "outputTextFormat": "none",
-                       "saveRequest": False,
-                       "speed": 1,
-                       "voice": selected_voice
-                       }
+            payload = {
+                "text": message,
+                "outputFormat": API_FORMAT,
+                "outputTextFormat": "none",
+                "saveRequest": False,
+                "speed": 1,
+                "voice": selected_voice,
+            }
             headers = {"Authorization": f"Key {self._api_key}"} if self._api_key else {}
 
             _LOGGER.info("TTS request: %s", payload)
 
             async with async_timeout.timeout(10):
                 session = async_get_clientsession(self._hass)
-                async with session.post(self._url, json=payload, headers=headers) as resp:
+                async with session.post(
+                    self._url, json=payload, headers=headers
+                ) as resp:
                     check_response(resp)
                     data = await resp.json()
                     audio_bytes = base64.b64decode(data.get("audioAsString"))
@@ -122,4 +138,6 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
         return None
 
     async def async_get_tts_audio(self, message, language, options=None):
-        return await self._provider.async_get_tts_audio(message=message, language=language, options=options)
+        return await self._provider.async_get_tts_audio(
+            message=message, language=language, options=options
+        )

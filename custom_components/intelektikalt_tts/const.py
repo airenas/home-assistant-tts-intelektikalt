@@ -1,4 +1,5 @@
 """Constants for home-assistant-tts-intelektikalt."""
+
 from enum import Enum
 from logging import Logger, getLogger
 
