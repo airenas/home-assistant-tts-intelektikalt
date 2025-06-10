@@ -122,4 +122,4 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
         return None
 
     async def async_get_tts_audio(self, message, language, options=None):
-        return self._provider.async_get_supported_voices(message=message, language=language, options=options)
+        return self._provider.async_get_tts_audio(message=message, language=language, options=options)
