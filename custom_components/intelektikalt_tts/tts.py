@@ -86,10 +86,11 @@ class IntelektikaLTTTSProvider(Provider):
         return [self._language]
 
     async def async_get_tts_audio(
-        self, message: str, _language: str, options: dict | None = None
+        self, message: str, language: str, options: dict | None = None
     ) -> TtsAudioType:
         """Load TTS from intelektikalt."""
         try:
+            _LOGGER.info("Lang: %s", language)
             selected_voice = options.get(CONF_VOICE) if options else None
             if not selected_voice:
                 selected_voice = self._voice
