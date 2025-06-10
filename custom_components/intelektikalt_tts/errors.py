@@ -1,6 +1,9 @@
+"""Errors for intelektikalt TTS integration."""
+
+import http
 from typing import TYPE_CHECKING
 
-from aiohttp import ClientResponseError
+from aiohttp import ClientResponse, ClientResponseError
 from homeassistant.exceptions import HomeAssistantError
 
 
@@ -34,7 +37,7 @@ class WrongKeyError(HomeAssistantError):
         self.generate_message = True
 
 
-class QuotaExceeded(HomeAssistantError):
+class QuotaExceededError(HomeAssistantError):
     """Exception to indicate out of quota error."""
 
     def __init__(self, quota: int, remaining: int) -> None:
@@ -55,22 +58,23 @@ class QuotaExceeded(HomeAssistantError):
         self.generate_message = True
 
 
-def check_response(resp):
+def check_response(resp: ClientResponse) -> None:
+    """Check response for errors."""
     try:
         resp.raise_for_status()
     except ClientResponseError as e:
-        if e.status == 429:
-            raise QuotaExceeded(
+        if e.status == http.HTTPStatus.TOO_MANY_REQUESTS.value:
+            raise QuotaExceededError(
                 remaining=e.headers.get("X-Rate-Limit-Short-Remaining", 0),
                 quota=e.headers.get("X-Rate-Limit-Limit", 0),
-            )
-        if e.status == 403:
-            raise QuotaExceeded(
+            ) from e
+        if e.status == http.HTTPStatus.FORBIDDEN.value:
+            raise QuotaExceededError(
                 remaining=e.headers.get("X-Rate-Limit-Remaining", 0),
                 quota=e.headers.get("X-Rate-Limit-Limit", 0),
-            )
-        if e.status == 401:
-            raise WrongKeyError
-        raise ApiClientError(value=f"failed with status {e.status}: {e.message}")
+            ) from e
+        if e.status == http.HTTPStatus.UNAUTHORIZED.value:
+            raise WrongKeyError from e
+        raise ApiClientError(value=f"failed with status {e.status}: {e.message}") from e
     except Exception as e:
-        raise ApiClientError(value=f"{e}")
+        raise ApiClientError(value=f"{e}") from e

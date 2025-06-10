@@ -14,6 +14,8 @@ API_LANGUAGE = "lt"
 
 
 class VoiceEnum(Enum):
+    """Enum for available voices."""
+
     LAIMIS = "laimis"
     LINA = "lina"
     ASTRA = "astra"
@@ -21,4 +23,5 @@ class VoiceEnum(Enum):
 
     @classmethod
     def default(cls) -> "VoiceEnum":
+        """Return the default voice."""
         return cls.LAIMIS

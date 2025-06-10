@@ -1,8 +1,15 @@
+"""TTS Wrapper for intelektikalt TTS integration."""
+
 import base64
 import logging
 
 import async_timeout
-from homeassistant.components.tts import Provider, TextToSpeechEntity, Voice
+from homeassistant.components.tts import (
+    Provider,
+    TextToSpeechEntity,
+    TtsAudioType,
+    Voice,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
@@ -21,14 +28,24 @@ from custom_components.intelektikalt_tts.errors import ApiClientError, check_res
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_get_engine(hass, config, discovery_info=None):
+class AddEntitiesCallback:
+    """Fake Callback for adding entities."""
+    pass
+
+
+async def async_get_engine(
+        hass: HomeAssistant, config: dict, _discovery_info: dict | None = None
+) -> Provider:
     """Return the TTS provider instance."""
     return IntelektikaLTTTSProvider(hass, config)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities
+        hass: HomeAssistant,
+        config_entry: ConfigEntry,
+        async_add_entities: AddEntitiesCallback,
 ) -> None:
+    """Set up the intelektikalt TTS platform from a config entry."""
     async_add_entities(
         [
             IntelektikaLTTTSEntity(
@@ -39,8 +56,10 @@ async def async_setup_entry(
 
 
 class IntelektikaLTTTSProvider(Provider):
-    def __init__(self, hass, config):
-        _LOGGER.info(f"Init {__name__}")
+    """TTS provider for intelektikalt TTS service."""
+
+    def __init__(self, hass: HomeAssistant, config: dict) -> None:
+        """Initialize the TTS provider."""
         self._hass = hass
         self._language = API_LANGUAGE
         self._api_key = config.get("api_key")
@@ -48,22 +67,29 @@ class IntelektikaLTTTSProvider(Provider):
         self._url = API_URL
 
     @property
-    def default_language(self):
+    def default_language(self) -> str:
+        """Return the default language of the TTS provider."""
         return self._language
 
     @property
-    def language(self):
+    def language(self) -> str:
+        """Return the language of the TTS provider."""
         return self._language
 
     @property
-    def name(self):
+    def name(self) -> str:
+        """Return the name of the TTS provider."""
         return API_TITLE
 
     @property
-    def supported_languages(self):
+    def supported_languages(self) -> list[str]:
+        """Return a list of supported languages."""
         return [self._language]
 
-    async def async_get_tts_audio(self, message, language, options=None):
+    async def async_get_tts_audio(
+            self, message: str, _language: str, options: dict | None = None
+    ) -> TtsAudioType:
+        """Load TTS from intelektikalt."""
         try:
             selected_voice = options.get(CONF_VOICE) if options else None
             if not selected_voice:
@@ -84,26 +110,29 @@ class IntelektikaLTTTSProvider(Provider):
             async with async_timeout.timeout(10):
                 session = async_get_clientsession(self._hass)
                 async with session.post(
-                    self._url, json=payload, headers=headers
+                        self._url, json=payload, headers=headers
                 ) as resp:
                     check_response(resp)
                     data = await resp.json()
                     audio_bytes = base64.b64decode(data.get("audioAsString"))
                     return API_FORMAT, audio_bytes
 
-        except HomeAssistantError as e:
-            raise e
+        except HomeAssistantError:
+            raise
         except Exception as e:
-            raise ApiClientError(value=f"{e}")
+            raise ApiClientError(value=f"{e}") from e
 
     @property
     def supports_streaming(self) -> bool:
+        """Return True if the provider supports streaming."""
         return False
 
 
 class IntelektikaLTTTSEntity(TextToSpeechEntity):
+    """Text to Speech entity for intelektikalt TTS provider."""
+
     def __init__(self, provider: IntelektikaLTTTSProvider) -> None:
-        _LOGGER.info(f"Init {__name__}")
+        """Initialize the TTS entity."""
         self._provider = provider
 
     @property
@@ -117,7 +146,8 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
         return self._provider.supported_languages
 
     @property
-    def name(self):
+    def name(self) -> str:
+        """Return the name of the TTS provider."""
         return self._provider.name
 
     @property
@@ -137,7 +167,10 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
             ]
         return None
 
-    async def async_get_tts_audio(self, message, language, options=None):
+    async def async_get_tts_audio(
+            self, message: str, language: str, options: dict | None = None
+    ) -> TtsAudioType:
+        """Load TTS from intelektikalt."""
         return await self._provider.async_get_tts_audio(
             message=message, language=language, options=options
         )
