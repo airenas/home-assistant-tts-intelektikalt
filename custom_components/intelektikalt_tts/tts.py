@@ -30,20 +30,19 @@ _LOGGER = logging.getLogger(__name__)
 
 class AddEntitiesCallback:
     """Fake Callback for adding entities."""
-    pass
 
 
 async def async_get_engine(
-        hass: HomeAssistant, config: dict, _discovery_info: dict | None = None
+    hass: HomeAssistant, config: dict, _discovery_info: dict | None = None
 ) -> Provider:
     """Return the TTS provider instance."""
     return IntelektikaLTTTSProvider(hass, config)
 
 
 async def async_setup_entry(
-        hass: HomeAssistant,
-        config_entry: ConfigEntry,
-        async_add_entities: AddEntitiesCallback,
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the intelektikalt TTS platform from a config entry."""
     async_add_entities(
@@ -87,7 +86,7 @@ class IntelektikaLTTTSProvider(Provider):
         return [self._language]
 
     async def async_get_tts_audio(
-            self, message: str, _language: str, options: dict | None = None
+        self, message: str, _language: str, options: dict | None = None
     ) -> TtsAudioType:
         """Load TTS from intelektikalt."""
         try:
@@ -110,7 +109,7 @@ class IntelektikaLTTTSProvider(Provider):
             async with async_timeout.timeout(10):
                 session = async_get_clientsession(self._hass)
                 async with session.post(
-                        self._url, json=payload, headers=headers
+                    self._url, json=payload, headers=headers
                 ) as resp:
                     check_response(resp)
                     data = await resp.json()
@@ -168,7 +167,7 @@ class IntelektikaLTTTSEntity(TextToSpeechEntity):
         return None
 
     async def async_get_tts_audio(
-            self, message: str, language: str, options: dict | None = None
+        self, message: str, language: str, options: dict | None = None
     ) -> TtsAudioType:
         """Load TTS from intelektikalt."""
         return await self._provider.async_get_tts_audio(
