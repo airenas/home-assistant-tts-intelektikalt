@@ -10,7 +10,5 @@
   "issue_tracker": "https://github.com/airenas/home-assistant-tts-intelektikalt/issues",
   "version": "v0.0.10",
   "iot_class": "cloud_polling",
-  "integration_type": "service",
-  "supported_platforms": ["tts"],
-  "logo": "logo.png"
+  "integration_type": "service"
 }
