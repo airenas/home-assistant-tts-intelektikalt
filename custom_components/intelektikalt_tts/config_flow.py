@@ -11,7 +11,7 @@ from .const import API_TITLE, API_DOMAIN
 
 
 class IntelektikaLTTTSFlowHandler(config_entries.ConfigFlow, domain=API_DOMAIN):
-    """Config flow for IntelektikaLT TTS."""
+    """Config flow for Intelektika.lt TTS."""
 
     VERSION = 1
 

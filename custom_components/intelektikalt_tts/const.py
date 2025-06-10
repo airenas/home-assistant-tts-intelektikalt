@@ -6,7 +6,7 @@ LOGGER: Logger = getLogger(__package__)
 
 CONF_VOICE = "voice"
 API_DOMAIN = "intelektikalt_tts"
-API_TITLE = "IntelektikaLT TTS"
+API_TITLE = "Intelektika.lt TTS"
 API_FORMAT = "mp3"
 API_URL = "https://sinteze.intelektika.lt/synthesis.service/prod/synthesize"
 API_LANGUAGE = "lt"
