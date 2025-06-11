@@ -51,12 +51,16 @@ See samples at [Intelektika.lt Voices](https://snekos-sinteze.lt).
 Once configured, you can use the TTS service in Home Assistant automations or scripts. Example:
 
 ```yaml
-service: tts.intelektikalt_tts_say
-data:
-  entity_id: media_player.your_media_player
-  message: "Sveiki atvykę į namus!"
-  options:
-    voice: lina
+- action: tts.speak
+  target:
+    entity_id: tts.intelektika_lt_tts
+  data:
+    cache: true
+    media_player_entity_id: media_player.your_media_player
+    message: "Sveiki atvykę į namus!"
+    language: lt
+    options:
+      voice: laimis    
 ```
 
 ## Troubleshooting
