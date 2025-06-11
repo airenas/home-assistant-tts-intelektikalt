@@ -23,7 +23,7 @@ The Intelektika.lt TTS Integration is a custom component for Home Assistant that
 
 1. Go to **Settings** > **Devices & Services** > **Integrations**.
 2. Click **Add Integration** and search for "Intelektika.lt TTS".
-3. (Optional) Enter your API key and configure the integration. Otherwise, 5000 monthly symbols limit will be applied.
+3. (Optional) Enter your API key and configure the integration. Otherwise, a limit of 5,000 symbols per month will be applied.
 
 ### Example `configuration.yaml` (if required)
 
